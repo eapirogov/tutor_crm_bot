@@ -1,0 +1,230 @@
+:root {
+    --bg: #f7f7f8;
+    --surface: #ffffff;
+    --border: #e8e8ec;
+    --text: #1d1d1f;
+    --muted: #86868b;
+    --accent: #2563eb;
+    --accent-soft: #eef3ff;
+    --green: #16a34a;
+    --red: #dc2626;
+    --amber: #d97706;
+    --radius: 14px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+}
+
+* { box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    margin: 0; color: var(--text); background: var(--bg);
+    font-size: 15px; line-height: 1.5;
+}
+
+/* --- Навигация --- */
+.topnav {
+    display: flex; gap: 0.25rem; padding: 0.6rem 1.25rem;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 10;
+}
+.topnav a {
+    text-decoration: none; color: var(--muted); font-weight: 500;
+    padding: 0.45rem 0.85rem; border-radius: 9px; transition: 0.15s;
+    font-size: 0.92rem;
+}
+.topnav a:hover { color: var(--text); background: var(--bg); }
+
+main { max-width: 1100px; margin: 1.75rem auto; padding: 0 1.25rem; }
+h1 { font-size: 1.6rem; font-weight: 650; letter-spacing: -0.01em; margin: 0 0 1.25rem; }
+h2 { font-size: 1.05rem; font-weight: 600; margin: 2rem 0 0.85rem; }
+a { color: var(--accent); }
+
+/* --- Кнопки и поля --- */
+button {
+    padding: 0.5rem 1.05rem; border: none; border-radius: 9px;
+    background: var(--accent); color: #fff; font-size: 0.9rem; font-weight: 500;
+    cursor: pointer; transition: 0.15s;
+}
+button:hover { background: #1d4fd8; }
+button.ghost { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+button.ghost:hover { background: var(--border); }
+button.danger { background: transparent; color: var(--red); border: 1px solid #f0caca; }
+button.danger:hover { background: #fdeaea; }
+
+input, select, textarea {
+    padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 9px;
+    font-size: 0.9rem; font-family: inherit; background: var(--surface); color: var(--text);
+}
+input:focus, select:focus, textarea:focus {
+    outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
+}
+textarea { resize: vertical; }
+label { font-size: 0.9rem; }
+
+.add-form { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; align-items: center; }
+.add-form input, .add-form select { flex: 0 1 auto; }
+.add-form input[name="name"] { flex: 1 1 150px; }
+
+/* --- Карточки и таблицы --- */
+.card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow);
+    margin: 1rem 0;
+}
+.card p { margin: 0.4rem 0; }
+
+table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+}
+th, td { padding: 0.7rem 1rem; text-align: left; }
+th {
+    background: #fafafb; font-size: 0.72rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.03em; font-weight: 600;
+    border-bottom: 1px solid var(--border);
+}
+td { border-bottom: 1px solid var(--border); font-size: 0.92rem; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #fafafb; }
+td a { text-decoration: none; font-weight: 500; }
+.empty { color: var(--muted); text-align: center; padding: 1.5rem; }
+
+.pos { color: var(--green); font-weight: 600; }
+.neg { color: var(--red); font-weight: 600; }
+.muted { color: var(--muted); }
+tfoot td { border-top: 2px solid var(--border); background: #fafafb; }
+
+.back { color: var(--muted); text-decoration: none; font-size: 0.88rem; display: inline-block; margin-bottom: 0.5rem; }
+.back:hover { color: var(--text); }
+.todo { color: var(--muted); font-style: italic; margin-top: 2rem; }
+
+/* --- Расписание: навигация --- */
+.week-nav { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
+.week-nav .label { font-weight: 600; margin: 0 0.5rem; }
+.week-nav a {
+    text-decoration: none; color: var(--text); padding: 0.4rem 0.8rem;
+    border: 1px solid var(--border); border-radius: 9px; background: var(--surface);
+    font-size: 0.88rem;
+}
+.week-nav a:hover { background: var(--bg); }
+.week-nav .today-link { color: var(--accent); border-color: var(--accent-soft); }
+
+/* --- Расписание: серии --- */
+.recurring { margin-bottom: 1.5rem; }
+.recurring summary {
+    cursor: pointer; color: var(--accent); font-size: 0.9rem; font-weight: 500;
+    padding: 0.5rem 0; user-select: none;
+}
+.weekdays { display: inline-flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.weekdays label {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.35rem 0.6rem; border: 1px solid var(--border); border-radius: 8px;
+    cursor: pointer; background: var(--surface); font-size: 0.85rem;
+}
+
+/* --- Расписание: почасовая сетка --- */
+.calendar {
+    --time-col: 56px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+}
+.cal-headrow { display: flex; }
+.cal-body { display: flex; }
+
+.cal-corner { width: var(--time-col); flex: none; background: #fafafb; border-bottom: 1px solid var(--border); }
+.cal-head {
+    flex: 1 1 0; padding: 0.6rem 0.4rem; text-align: center;
+    font-size: 0.78rem; font-weight: 600;
+    border-bottom: 1px solid var(--border); border-left: 1px solid var(--border);
+    background: #fafafb;
+}
+.cal-head.today { color: var(--accent); background: var(--accent-soft); }
+.cal-head .dnum { display: block; font-size: 1.05rem; color: var(--text); font-weight: 650; }
+.cal-head.today .dnum { color: var(--accent); }
+
+/* колонка времени слева */
+.cal-times { width: var(--time-col); flex: none; }
+.cal-hour {
+    height: var(--hour-px); font-size: 0.72rem; color: var(--muted);
+    text-align: right; padding-right: 0.5rem; box-sizing: border-box;
+    /* метка центрируется на верхней линии своего часа, не вылезая за край */
+    display: flex; align-items: flex-start; justify-content: flex-end;
+    line-height: 1; padding-top: 0.35rem;
+}
+.cal-hour:first-child { padding-top: 0.4rem; }
+
+/* колонка одного дня: relative-контейнер для абсолютных событий */
+.cal-col { flex: 1 1 0; position: relative; border-left: 1px solid var(--border); }
+.cal-col.today-col { background: #fcfdff; }
+.cal-line { height: var(--hour-px); border-top: 1px solid var(--border); box-sizing: border-box; }
+
+.event {
+    position: absolute; left: 3px; right: 3px;
+    background: var(--accent-soft); border-left: 3px solid var(--accent);
+    border-radius: 7px; overflow: visible;
+    font-size: 0.78rem; cursor: pointer;
+}
+.event .ev-time { font-weight: 600; display: block; }
+.event .ev-name { color: var(--text); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.event.status-done { background: #ecfdf3; border-left-color: var(--green); }
+.event.status-cancelled { background: #fef2f2; border-left-color: var(--red); opacity: 0.75; }
+.event.status-cancelled .ev-name { text-decoration: line-through; }
+.event.status-no_show { background: #fffbeb; border-left-color: var(--amber); }
+
+/* выпадающее меню действий по клику (через :focus-within на details) */
+.event details { margin: 0; height: 100%; }
+.event summary {
+    list-style: none; cursor: pointer; height: 100%;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0.3rem 0.45rem;
+}
+.event summary::-webkit-details-marker { display: none; }
+.event .actions {
+    position: absolute; z-index: 5; top: 100%; left: 0; margin-top: 3px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12); padding: 0.4rem; min-width: 150px;
+    display: flex; flex-direction: column; gap: 0.25rem;
+}
+.event .actions form { margin: 0; }
+.event .actions button {
+    width: 100%; text-align: left; background: transparent; color: var(--text);
+    padding: 0.4rem 0.55rem; font-size: 0.82rem; border-radius: 7px;
+}
+.event .actions button:hover { background: var(--bg); }
+.event .actions button.danger { color: var(--red); border: none; }
+.event .actions button.danger:hover { background: #fdeaea; }
+.event .actions .sep { height: 1px; background: var(--border); margin: 0.15rem 0; }
+
+/* --- Бейджи статусов --- */
+.badge {
+    font-size: 0.72rem; padding: 0.2rem 0.55rem; border-radius: 999px;
+    background: var(--bg); color: var(--muted); font-weight: 500;
+}
+.badge.status-done { background: #ecfdf3; color: var(--green); }
+.badge.status-cancelled { background: #fef2f2; color: var(--red); }
+.badge.status-no_show { background: #fffbeb; color: var(--amber); }
+.badge.status-planned { background: var(--accent-soft); color: var(--accent); }
+
+/* --- Карточка ученика: ДЗ --- */
+.lesson-card { padding: 1rem; }
+.lesson-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.7rem; }
+.notes-form { display: flex; flex-direction: column; gap: 0.5rem; }
+.notes-form button { align-self: flex-start; }
+
+/* контакты */
+.contact-link { font-weight: 500; }
+
+/* инфо-сетка и редактирование на карточке ученика */
+.info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
+.info-grid .muted { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; }
+.edit-toggle { cursor: pointer; color: var(--accent); font-size: 0.88rem; user-select: none; }
+.edit-form { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.85rem; }
+.edit-form label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.8rem; color: var(--muted); }
+.edit-form label input, .edit-form label textarea { font-size: 0.9rem; color: var(--text); }
+.edit-form .full { grid-column: 1 / -1; }
+.edit-form button { grid-column: 1 / -1; justify-self: start; }
+
+@media (max-width: 760px) {
+    .calendar { grid-template-columns: 44px repeat(7, minmax(70px, 1fr)); overflow-x: auto; }
+    main { padding: 0 0.75rem; }
+}

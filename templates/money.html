@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Деньги — Tutor CRM{% endblock %}
+{% block content %}
+<h1>Деньги</h1>
+
+<h2 style="margin-top:0">Доход по месяцам</h2>
+<table>
+    <thead><tr><th>Месяц</th><th>Оплат</th><th>Сумма</th></tr></thead>
+    <tbody>
+    {% for m in months %}
+        <tr>
+            <td>{{ m.label }}</td>
+            <td class="muted">{{ m.payments }}</td>
+            <td class="pos">{{ m.total | int }} ₽</td>
+        </tr>
+    {% else %}
+        <tr><td colspan="3" class="empty">Оплат пока не было</td></tr>
+    {% endfor %}
+    </tbody>
+    {% if months %}
+    <tfoot>
+        <tr><td><b>Всего</b></td><td></td><td><b>{{ total | int }} ₽</b></td></tr>
+    </tfoot>
+    {% endif %}
+</table>
+
+<h2>Нужно продлить ({{ debtors | length }})</h2>
+<p class="todo">Ученики, у которых занятия закончились или на нуле.</p>
+<table>
+    <thead>
+        <tr><th>Имя</th><th>Предмет</th><th>Осталось занятий</th><th></th></tr>
+    </thead>
+    <tbody>
+    {% for s in debtors %}
+        <tr>
+            <td><a href="/students/{{ s.id }}">{{ s.name }}</a></td>
+            <td>{{ s.subject or "—" }}</td>
+            <td class="neg">{{ s.balance }}</td>
+            <td><a href="/students/{{ s.id }}">оплата</a></td>
+        </tr>
+    {% else %}
+        <tr><td colspan="4" class="empty">Все ученики с активными занятиями</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

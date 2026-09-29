@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Ученики — Tutor CRM{% endblock %}
+{% block content %}
+<h1>Ученики</h1>
+
+<form hx-post="/students" hx-target="#students-table" hx-swap="outerHTML"
+      hx-on::after-request="this.reset()" class="add-form">
+    <input name="name" placeholder="Имя *" required>
+    <input name="subject" placeholder="Предмет">
+    <input name="parent_name" placeholder="Родитель">
+    <input name="contact" placeholder="Контакт (@username / телефон)">
+    <button type="submit">Добавить</button>
+</form>
+
+{% include "_students_table.html" %}
+{% endblock %}

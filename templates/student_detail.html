@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}{{ s.name }} — Tutor CRM{% endblock %}
+{% block content %}
+<a href="/students" class="back">← к ученикам</a>
+<h1>{{ s.name }}</h1>
+
+<div class="card">
+    <div class="info-grid">
+        <div><span class="muted">Предмет</span><br>{{ s.subject or "—" }}</div>
+        <div><span class="muted">Родитель</span><br>{{ s.parent_name or "—" }}</div>
+        <div><span class="muted">Контакт</span><br>
+            {% if s.contact %}{{ contact_link(s.contact) }}{% else %}—{% endif %}
+        </div>
+        <div><span class="muted">Осталось занятий</span><br>
+            <span class="{{ 'neg' if balance <= 0 else 'pos' }}">{{ balance }}</span>
+        </div>
+    </div>
+    {% if s.notes %}<p style="margin-top:1rem"><span class="muted">Заметки:</span> {{ s.notes }}</p>{% endif %}
+    <details style="margin-top:1rem">
+        <summary class="edit-toggle">Редактировать</summary>
+        <form method="post" action="/students/{{ s.id }}/edit" class="edit-form">
+            <label>Имя<input name="name" value="{{ s.name }}" required></label>
+            <label>Предмет<input name="subject" value="{{ s.subject or '' }}"></label>
+            <label>Родитель<input name="parent_name" value="{{ s.parent_name or '' }}"></label>
+            <label>Контакт<input name="contact" value="{{ s.contact or '' }}" placeholder="@username или телефон"></label>
+            <label class="full">Заметки<textarea name="notes" rows="2">{{ s.notes or '' }}</textarea></label>
+            <button type="submit">Сохранить</button>
+        </form>
+    </details>
+</div>
+
+<h2>Оплата</h2>
+<form method="post" action="/students/{{ s.id }}/payment" class="add-form">
+    <select name="package">
+        {% for key, p in packages.items() %}
+        <option value="{{ key }}">{{ p[0] }} — {{ p[1] }} зан. / {{ p[2] | int }} ₽</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Внести оплату</button>
+</form>
+
+{% if payments %}
+<table>
+    <thead><tr><th>Дата</th><th>Пакет</th><th>Занятий</th><th>Сумма</th></tr></thead>
+    <tbody>
+    {% for p in payments %}
+        <tr>
+            <td>{{ p.dt[:10] }}</td>
+            <td>{{ p.package }}</td>
+            <td class="pos">+{{ p.lessons_count }}</td>
+            <td>{{ p.amount | int }} ₽</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+<h2>Занятия и ДЗ</h2>
+{% for l in lessons %}
+<div class="card lesson-card">
+    <div class="lesson-head">
+        <b>{{ l.dt[:10] }} · {{ l.dt[11:16] }}</b>
+        <span class="badge status-{{ l.status }}">{{ statuses[l.status] }}</span>
+    </div>
+    <form method="post" action="/lessons/{{ l.id }}/notes" class="notes-form">
+        <input type="hidden" name="student_id" value="{{ s.id }}">
+        <textarea name="homework" rows="2" placeholder="Домашнее задание">{{ l.homework or "" }}</textarea>
+        <textarea name="progress_note" rows="2" placeholder="Заметка о прогрессе">{{ l.progress_note or "" }}</textarea>
+        <button type="submit" class="ghost">Сохранить</button>
+    </form>
+</div>
+{% else %}
+<p class="empty">Занятий пока нет. Добавь в <a href="/schedule">расписании</a>.</p>
+{% endfor %}
+
+<form method="post" action="/students/{{ s.id }}/archive"
+      onsubmit="return confirm('Архивировать ученика?')" style="margin-top:2rem">
+    <button type="submit" class="danger">Архивировать</button>
+</form>
+{% endblock %}

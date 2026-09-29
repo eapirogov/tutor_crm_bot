@@ -1,0 +1,20 @@
+<table id="students-table">
+    <thead>
+        <tr>
+            <th>Имя</th><th>Предмет</th><th>Контакт</th><th>Осталось занятий</th><th></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for s in students %}
+        <tr>
+            <td><a href="/students/{{ s.id }}">{{ s.name }}</a></td>
+            <td>{{ s.subject or "—" }}</td>
+            <td>{% if s.contact %}{{ contact_link(s.contact) }}{% else %}<span class="muted">—</span>{% endif %}</td>
+            <td class="{{ 'neg' if s.balance <= 0 else 'pos' }}">{{ s.balance }}</td>
+            <td><a href="/students/{{ s.id }}">открыть →</a></td>
+        </tr>
+    {% else %}
+        <tr><td colspan="5" class="empty">Пока нет учеников</td></tr>
+    {% endfor %}
+    </tbody>
+</table>

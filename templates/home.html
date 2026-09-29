@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Сегодня — Tutor CRM{% endblock %}
+{% block content %}
+<h1>Сегодня, {{ today_label }}</h1>
+
+<h2>Занятия ({{ lessons | length }})</h2>
+<table>
+    <thead><tr><th>Время</th><th>Ученик</th><th>Предмет</th><th>Статус</th></tr></thead>
+    <tbody>
+    {% for l in lessons %}
+        <tr>
+            <td>{{ l.dt[11:16] }}</td>
+            <td><a href="/students/{{ l.student_id }}">{{ l.student_name }}</a></td>
+            <td>{{ l.subject or "—" }}</td>
+            <td>{{ statuses[l.status] }}</td>
+        </tr>
+    {% else %}
+        <tr><td colspan="4" class="empty">На сегодня занятий нет</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h2>Нужно продлить ({{ debtors | length }})</h2>
+<table>
+    <thead><tr><th>Имя</th><th>Осталось занятий</th><th></th></tr></thead>
+    <tbody>
+    {% for s in debtors %}
+        <tr>
+            <td><a href="/students/{{ s.id }}">{{ s.name }}</a></td>
+            <td class="neg">{{ s.balance }}</td>
+            <td><a href="/students/{{ s.id }}">оплата</a></td>
+        </tr>
+    {% else %}
+        <tr><td colspan="3" class="empty">Все ученики с активными занятиями</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

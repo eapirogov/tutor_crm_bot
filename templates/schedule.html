@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Расписание — Tutor CRM{% endblock %}
+{% block content %}
+<h1>Расписание</h1>
+
+<div class="week-nav">
+    <a href="/schedule?offset={{ offset - 1 }}">←</a>
+    <span class="label">{{ week_label }}</span>
+    <a href="/schedule?offset={{ offset + 1 }}">→</a>
+    {% if offset != 0 %}<a href="/schedule" class="today-link">сегодня</a>{% endif %}
+</div>
+
+<form method="post" action="/lessons" class="add-form">
+    <input type="hidden" name="offset" value="{{ offset }}">
+    <select name="student_id" required>
+        <option value="" disabled selected>Ученик…</option>
+        {% for s in students %}
+        <option value="{{ s.id }}">{{ s.name }}{% if s.subject %} ({{ s.subject }}){% endif %}</option>
+        {% endfor %}
+    </select>
+    <input type="datetime-local" name="dt" required>
+    <button type="submit">Добавить занятие</button>
+</form>
+
+<details class="recurring">
+    <summary>+ Повторяющаяся серия</summary>
+    <form method="post" action="/lessons/recurring" class="add-form">
+        <input type="hidden" name="offset" value="{{ offset }}">
+        <select name="student_id" required>
+            <option value="" disabled selected>Ученик…</option>
+            {% for s in students %}
+            <option value="{{ s.id }}">{{ s.name }}</option>
+            {% endfor %}
+        </select>
+        <span class="weekdays">
+        {% for i, name in [(0,'Пн'),(1,'Вт'),(2,'Ср'),(3,'Чт'),(4,'Пт'),(5,'Сб'),(6,'Вс')] %}
+            <label><input type="checkbox" name="weekdays" value="{{ i }}"> {{ name }}</label>
+        {% endfor %}
+        </span>
+        <input type="time" name="time" value="17:00" required>
+        <input type="number" name="weeks" value="4" min="1" max="52" required title="недель вперёд">
+        <button type="submit">Создать серию</button>
+    </form>
+</details>
+
+<div class="calendar" style="--hour-px: {{ hour_px }}px;">
+    <!-- шапка: угол + дни -->
+    <div class="cal-headrow">
+        <div class="cal-corner"></div>
+        {% for day in days %}
+        <div class="cal-head {{ 'today' if day.is_today }}">
+            {{ day.label }}<span class="dnum">{{ day.date.strftime('%d') }}</span>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- тело: колонка времени + 7 колонок дней с абсолютными событиями -->
+    <div class="cal-body">
+        <div class="cal-times">
+            {% for hour in hours %}
+            <div class="cal-hour">{{ "%02d:00"|format(hour) }}</div>
+            {% endfor %}
+        </div>
+
+        {% for day in days %}
+        <div class="cal-col {{ 'today-col' if day.is_today }}">
+            {% for hour in hours %}<div class="cal-line"></div>{% endfor %}
+            {% for l in day.events %}
+        <div class="event status-{{ l.status }}" style="top: {{ l.top }}px; height: {{ l.height }}px;">
+            <details>
+                <summary>
+                    <span class="ev-time">{{ l.hh_mm }}–{{ l.end_hh_mm }}</span>
+                    <span class="ev-name">{{ l.student_name }}</span>
+                </summary>
+                <div class="actions">
+                    {% for code, label in statuses.items() %}
+                        {% if code != l.status %}
+                        <form method="post" action="/lessons/{{ l.id }}/status">
+                            <input type="hidden" name="offset" value="{{ offset }}">
+                            <input type="hidden" name="status" value="{{ code }}">
+                            <button type="submit">{{ label }}</button>
+                        </form>
+                        {% endif %}
+                    {% endfor %}
+                    <div class="sep"></div>
+                    <form method="post" action="/lessons/{{ l.id }}/delete"
+                          onsubmit="return confirm('Удалить занятие?')">
+                        <input type="hidden" name="offset" value="{{ offset }}">
+                        <button type="submit" class="danger">Удалить</button>
+                    </form>
+                </div>
+            </details>
+        </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
